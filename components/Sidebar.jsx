@@ -2,8 +2,21 @@ import React from 'react'
 import styled from 'styled-components'
 import { Avatar, IconButton, Button } from '@mui/material'
 import { Chat, MoreVert, Search } from '@mui/icons-material'
+import * as EmailValidator from 'email-validator'
 
 function Sidebar() {
+
+  const createChat = () => {
+
+    const input = prompt("Ingresa el nombre del usuario con el que quieras hablar.")
+
+    if (!input) return null;
+
+    if(EmailValidator.validate(input)) {
+        // despues
+    }
+  }
+
   return (
     <Container>
        <Header>
@@ -31,7 +44,7 @@ function Sidebar() {
 
        </SearchBar>
 
-       <SidebarButton>Nuevo Chat</SidebarButton>
+       <SidebarButton onClick={createChat}>Nuevo Chat</SidebarButton>
 
     </Container>
   )
