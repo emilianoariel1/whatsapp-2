@@ -3,8 +3,16 @@ import styled from 'styled-components'
 import { Avatar, IconButton, Button } from '@mui/material'
 import { Chat, MoreVert, Search } from '@mui/icons-material'
 import * as EmailValidator from 'email-validator'
+import { auth, db } from '/firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import ContactChat from './ContactChat'
 
 function Sidebar() {
+  
+  const [user] = useAuthState(auth);
+  const userChatRef = db.collection("chats").where("users", "array-contains", user.email)
+  const [chatsSnapshot] = useCollection(userChatRef);
 
   const createChat = () => {
 
@@ -12,16 +20,22 @@ function Sidebar() {
 
     if (!input) return null;
 
-    if(EmailValidator.validate(input)) {
-        // despues
+    if(EmailValidator.validate(input) && !chatAlreadyExists(input) && input !== user.email) {
+        
+        db.collection("chats").add({
+            users: [user.email, input],
+        })
     }
   }
+
+  const chatAlreadyExists = (recipientEmail) => !!chatsSnapshot?.docs.find(chat => chat.data().users.find(user => user === recipientEmail)?.length > 0);
+  
 
   return (
     <Container>
        <Header>
         
-        <UserAvatar />
+        <UserAvatar src={user.photoURL} onClick={() => auth.signOut()}/>
 
         <IconsContainer>
             
@@ -46,13 +60,21 @@ function Sidebar() {
 
        <SidebarButton onClick={createChat}>Nuevo Chat</SidebarButton>
 
+       {chatsSnapshot?.docs.map((chat) => (
+        <ContactChat key={chat.id} id={chat.id} users={chat.data().users} />
+       ))}
+
     </Container>
   )
 }
 
 export default Sidebar
 
-const Container = styled.div``;
+const Container = styled.div`
+   
+   background-color: white;
+
+`;
 
 const Header = styled.div`
  display: flex;
