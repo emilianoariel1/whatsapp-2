@@ -10,12 +10,21 @@ import { Mic } from '@mui/icons-material'
 import { useState } from 'react'
 import firebase from 'firebase/compat/app';
 import Message from './Message'
+import getRecipientEmail from '@/utils/getRecipientEmail'
+import TimeAgo from 'timeago-react'
+import { useRef } from 'react'
 
 function ChatScreen({ chat, messages }) {
 
    const [user] = useAuthState(auth);
    const router = useRouter();
    const [messagesSnapshot] = useCollection(db.collection("chats").doc(router.query.id).collection("messages").orderBy("timestamp", "asc"));
+
+   const endOfMessagesRef = useRef(null);
+
+   const [recipientSnapshot] = useCollection(
+    db.collection("users").where("email", "==", getRecipientEmail(chat.users, user))
+   );
 
    const [input, setInput] = useState("");
 
@@ -39,6 +48,13 @@ function ChatScreen({ chat, messages }) {
       }
    };
 
+   const scrollToBottom = () => {
+    endOfMessagesRef.current.scrollIntoView({ 
+      behavior: "smooth",
+      block: "start",
+     });
+   }
+
    const sendMessage = (e) => {
  
     e.preventDefault();
@@ -56,17 +72,29 @@ function ChatScreen({ chat, messages }) {
     });
 
     setInput("");
+    scrollToBottom();
 
    }
+
+   const recipient = recipientSnapshot?.docs?.[0]?.data();
+   const recipientEmail = getRecipientEmail(chat.users, user);
 
   return (
     <Container>
        <Header>
-          <Avatar />
+       { recipient ? ( <Avatar src={recipient?.photoURL} />) : ( <Avatar>{recipientEmail[0]}</Avatar>)}
 
           <HeaderInfo>
-            <h3>Rec Email</h3>
-            <p>Last Seen ..</p>
+            <h3>{recipientEmail}</h3>
+            {recipientSnapshot ? (
+               <p>Ultima vez {" "}
+                {recipient?.lastSeen?.toDate() ? (
+                  <TimeAgo datetime={recipient?.lastSeen?.toDate()} />
+                ) : "no disponible"}
+               </p>
+            ) : (
+              <p>Cargando...</p>
+            )}
           </HeaderInfo>
 
           <HeaderIcons>
@@ -82,7 +110,7 @@ function ChatScreen({ chat, messages }) {
 
        <MessageContainer>
          {showMessages()}
-         <EndOfMessage />
+         <EndOfMessage ref={endOfMessagesRef}/>
        </MessageContainer>
 
        <InputContainer>
@@ -114,6 +142,7 @@ const Header = styled.div`
 const HeaderInfo = styled.div`
   margin-left: 15px;
   flex: 1;
+  color: black;
 
   > h3 {
     margin-bottom: 3px;
@@ -127,12 +156,15 @@ const HeaderInfo = styled.div`
 
 const HeaderIcons = styled.div``;
 
-const EndOfMessage = styled.div``;
+const EndOfMessage = styled.div`
+ margin-bottom: 50px;
+`;
 
 const MessageContainer = styled.div`
  padding: 30px;
  background-color: #e5ded8;
  min-height: 90vh;
+ color: black;
 `;
 
 const InputContainer = styled.form`
@@ -154,4 +186,5 @@ const Input = styled.input`
  background-color: whitesmoke;
  margin-left: 15px;
  margin-right: 15px;
+ color: black;
  `;

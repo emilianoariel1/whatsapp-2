@@ -120,6 +120,7 @@ const SearchBar = styled.div`
  align-items: center;
  padding: 20px;
  border-radius: 2px;
+ color: black;
 
 `;
 
@@ -128,6 +129,7 @@ const SearchInput = styled.input`
  border: none;
  flex: 1;
  background-color: whitesmoke;
+ color: black;
 
 `;
 
