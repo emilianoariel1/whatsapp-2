@@ -143,6 +143,7 @@ const HeaderInfo = styled.div`
   margin-left: 15px;
   flex: 1;
   color: black;
+  font-family: monospace;
 
   > h3 {
     margin-bottom: 3px;
@@ -173,8 +174,10 @@ const InputContainer = styled.form`
  padding: 10px;
  position: sticky;
  bottom: 0;
- background-color: blue;
+ background-color: white;
  z-index: 100;
+ border-top: 1px solid whitesmoke;
+ color: gray;
 `;
 
 const Input = styled.input`
@@ -183,7 +186,7 @@ const Input = styled.input`
  border: none;
  border-radius: 10px;
  padding: 20px;
- background-color: whitesmoke;
+ background-color: #e5ded8;
  margin-left: 15px;
  margin-right: 15px;
  color: black;

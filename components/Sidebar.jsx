@@ -13,10 +13,11 @@ function Sidebar() {
   const [user] = useAuthState(auth);
   const userChatRef = db.collection("chats").where("users", "array-contains", user.email)
   const [chatsSnapshot] = useCollection(userChatRef);
+  console.log(user);
 
   const createChat = () => {
 
-    const input = prompt("Ingresa el nombre del usuario con el que quieras hablar.")
+    const input = prompt("Ingresa el correo del usuario con el que quieras hablar.")
 
     if (!input) return null;
 
@@ -36,12 +37,9 @@ function Sidebar() {
        <Header>
         
         <UserAvatar src={user.photoURL} onClick={() => auth.signOut()}/>
+        <p>{user.displayName}</p>
 
         <IconsContainer>
-            
-            <IconButton>
-                <Chat />
-            </IconButton>
             
             <IconButton>
                 <MoreVert />
@@ -102,6 +100,7 @@ const Header = styled.div`
  padding: 15px;
  height: 80px;
  border-bottom: 1px solid whitesmoke;
+ color: black;
 
 `;
 
