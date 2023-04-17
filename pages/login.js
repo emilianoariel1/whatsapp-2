@@ -25,6 +25,8 @@ function Login() {
            <Button onClick={signIn} variant="outlined" >Iniciar Sesión con Google</Button>
         </LoginContainer>
 
+        <h3>Construido con Next.js © 2023</h3>
+
     </Container>
   )
 }
@@ -36,6 +38,7 @@ const Container = styled.div`
  place-items: center;
  height: 100vh;
  background-color: whitesmoke;
+ color: black;
 `;
 
 const LoginContainer = styled.div`

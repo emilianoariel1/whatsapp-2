@@ -143,7 +143,6 @@ const HeaderInfo = styled.div`
   margin-left: 15px;
   flex: 1;
   color: black;
-  font-family: monospace;
 
   > h3 {
     margin-bottom: 3px;

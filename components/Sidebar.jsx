@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Avatar, IconButton, Button } from '@mui/material'
-import { Chat, MoreVert, Search } from '@mui/icons-material'
+import { MoreVert, Search, Logout } from '@mui/icons-material'
 import * as EmailValidator from 'email-validator'
 import { auth, db } from '/firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -36,13 +36,13 @@ function Sidebar() {
     <Container>
        <Header>
         
-        <UserAvatar src={user.photoURL} onClick={() => auth.signOut()}/>
+        <UserAvatar src={user.photoURL} />
         <p>{user.displayName}</p>
 
         <IconsContainer>
             
-            <IconButton>
-                <MoreVert />
+            <IconButton onClick={() => auth.signOut()}>
+                <Logout />
             </IconButton>
             
         </IconsContainer>

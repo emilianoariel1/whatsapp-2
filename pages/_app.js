@@ -5,6 +5,9 @@ import Login from './login'
 import Loading from '../components/Loading'
 import firebase from 'firebase/compat/app';
 import { useEffect } from 'react'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin']});
 
 export default function App({ Component, pageProps }) {
 
@@ -28,5 +31,9 @@ export default function App({ Component, pageProps }) {
 
  if (!user) return <Login />;
 
-  return <Component {...pageProps} />
+  return (
+    <main className={inter.className}>
+       <Component {...pageProps} />
+    </main>
+  )
 }
